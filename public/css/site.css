@@ -392,3 +392,6 @@ textarea { resize: vertical; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+/* Package pricing line in the estimate */
+.summary-lines li.pkg-line { color: var(--ok); font-weight: 600; }

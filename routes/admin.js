@@ -71,7 +71,7 @@ api.get('/leads.csv', (req, res) => {
   const cols = ['id', 'created_at', 'status', 'name', 'phone', 'email', 'event_date', 'event_type', 'guests', 'location', 'package_id', 'estimate', 'items', 'message', 'notes'];
   const cell = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
   const rows = stmts.listLeads.all().map(shape).map((l) =>
-    cols.map((c) => cell(c === 'items' ? l.items.map((i) => `${i.qty}x ${i.name}`).join('; ') : l[c])).join(',')
+    cols.map((c) => cell(c === 'items' ? l.items.map((i) => (i.id === 'package' ? `${i.name} (-$${-i.subtotal})` : `${i.qty}x ${i.name}`)).join('; ') : l[c])).join(',')
   );
   res.set('Content-Type', 'text/csv; charset=utf-8');
   res.set('Content-Disposition', 'attachment; filename="elevated-events-leads.csv"');

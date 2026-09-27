@@ -44,4 +44,3 @@ The hard-coded prices in `public/index.html` (package cards and price lists) and
 - [x] Domain set to www.elevatedevents585.com (canonical, sitemap, robots, OG/schema URLs)
 - [x] Street address hidden per owner (site shows "East Rochester, NY" only)
 - [ ] Confirm the service towns listed
-- [ ] Add real lawn-game photos when available (the site currently uses illustrations)

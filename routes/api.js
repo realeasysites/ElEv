@@ -33,9 +33,9 @@ router.post('/quote', rateLimit({ windowMs: 15 * 60 * 1000, max: 8 }), async (re
   if (eventDate && !/^\d{4}-\d{2}-\d{2}$/.test(eventDate)) errors.event_date = 'Please pick a valid date.';
   if (Object.keys(errors).length) return res.status(400).json({ error: 'Please fix the highlighted fields.', fields: errors });
 
-  const { lines, total } = priceItems(b.items);
+  const { lines, total, packageId } = priceItems(b.items);
   const guests = Math.max(0, Math.min(2000, parseInt(b.guests, 10) || 0)) || null;
-  const pkg = PACKAGES.find((p) => p.id === b.package_id);
+  const pkg = PACKAGES.find((p) => p.id === packageId);
 
   const lead = {
     name,

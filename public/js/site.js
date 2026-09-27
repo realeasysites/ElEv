@@ -16,8 +16,8 @@
       { id: 'buckets', group: 'games', name: 'Battle Buckets', price: 25, unit: 'each', note: 'Giant bucket-pong basketball', max: 1 }
     ],
     packages: [
-      { id: 'backyard', name: 'Backyard Party', guests: 48, items: { tent20x20: 1, banquet: 6, chair: 48 }, total: 406 },
-      { id: 'celebration', name: 'Big Celebration', guests: 64, items: { tent20x30: 1, banquet: 8, chair: 64 }, total: 483 }
+      { id: 'backyard', name: 'Backyard Party', price: 399, guests: 48, items: { tent20x20: 1, banquet: 6, chair: 48 } },
+      { id: 'celebration', name: 'Big Celebration', price: 475, guests: 64, items: { tent20x30: 1, banquet: 8, chair: 64 } }
     ]
   };
 
@@ -106,6 +106,26 @@
     return catalog.items.reduce(function (s, i) { return s + (i.seats ? (qty[i.id] || 0) * i.seats : 0); }, 0);
   }
 
+  // Mirrors lib/catalog.js bestPrice(): package pricing kicks in automatically.
+  function isAddon(i) { return i.group === 'games' || i.id === 'sidewall'; }
+  function bestPrice() {
+    var alaCarte = catalog.items.reduce(function (s, i) { return s + (qty[i.id] || 0) * i.price; }, 0);
+    var best = { total: alaCarte, pkg: null };
+    catalog.packages.forEach(function (p) {
+      var tentId = Object.keys(p.items).filter(function (k) { var it = byId(k); return it && it.group === 'tents'; })[0];
+      if (!qty[tentId]) return;
+      var total = p.price;
+      catalog.items.forEach(function (i) {
+        var n = qty[i.id] || 0;
+        var extra = isAddon(i) ? n : Math.max(0, n - (p.items[i.id] || 0));
+        total += extra * i.price;
+      });
+      if (total < best.total) best = { total: total, pkg: p };
+    });
+    best.savings = alaCarte - best.total;
+    return best;
+  }
+
   var lastTotal = 0;
   function update() {
     var lines = [];
@@ -124,6 +144,11 @@
       }
     });
 
+    var best = bestPrice();
+    if (best.pkg && best.savings > 0) {
+      lines.push('<li class="pkg-line"><span>' + best.pkg.name + ' package pricing</span><span>−' + money(best.savings) + '</span></li>');
+    }
+    total = best.total;
     $('#summaryLines').innerHTML = lines.length ? lines.join('') : '<li class="empty">Add items to see your price.</li>';
     var totalEl = $('#summaryTotal');
     totalEl.textContent = money(total);

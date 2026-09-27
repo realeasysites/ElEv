@@ -59,7 +59,7 @@
 
     $('#leadList').innerHTML = list.length ? list.map(function (l) {
       var items = l.items.length
-        ? l.items.map(function (i) { return '<tr><td>' + i.qty + ' × ' + esc(i.name) + '</td><td>$' + i.subtotal + '</td></tr>'; }).join('') +
+        ? l.items.map(function (i) { return '<tr><td>' + (i.id === 'package' ? '' : i.qty + ' × ') + esc(i.name) + '</td><td>' + (i.subtotal < 0 ? '−$' + Math.abs(i.subtotal) : '$' + i.subtotal) + '</td></tr>'; }).join('') +
           '<tr><td><b>Estimate</b></td><td><b>$' + l.estimate + '</b></td></tr>'
         : '<tr><td colspan="2"><em>No items picked, so they want help choosing.</em></td></tr>';
       var digits = String(l.phone).replace(/[^\d+]/g, '');
