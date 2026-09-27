@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /admin
+Disallow: /api/
+Sitemap: https://www.elevatedevents585.com/sitemap.xml
